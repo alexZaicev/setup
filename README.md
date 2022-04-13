@@ -9,3 +9,10 @@ This repository contains automated setup scripts for setting up fresh installati
 - Git with default editor set to `vim`
 - Python 3 set as default
 - Docker and Docker compose
+
+## How to run? 
+
+**For Ubuntu** run the following command, where `VERSION` is your OS version:
+```bash
+wget -qO - https://github.com/alexZaicev/setup/blob/main/setup_ubuntu_v20.04.sh | sh
+```
