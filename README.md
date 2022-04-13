@@ -14,5 +14,5 @@ This repository contains automated setup scripts for setting up fresh installati
 
 **For Ubuntu** run the following command, where `VERSION` is your OS version:
 ```bash
-wget -qO - https://github.com/alexZaicev/setup/blob/main/setup_ubuntu_v20.04.sh | sh
+wget -qO - https://raw.githubusercontent.com/alexZaicev/setup/main/setup_ubuntu_v20.04.sh | sh
 ```
