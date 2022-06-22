@@ -1,0 +1,12 @@
+# OS specific
+*~
+.*.swp
+.DS_Store
+
+# IDE specific
+.idea/
+.vscode/
+
+# Binaries
+*.out
+

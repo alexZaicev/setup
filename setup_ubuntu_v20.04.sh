@@ -1,20 +1,40 @@
 #!/bin/bash
 
+function wait_input {
+    echo "Press any key to continue..."
+    while [ true ] ; do
+        read -t 3 -n 1
+        if [ $? = 0 ] ; then
+            break ;
+        fi
+    done
+}
+
+function sep {
+    echo "##########################################################################"
+    echo ""
+}
+
 echo "Running setup script for Ubuntu v20.04"
-echo "#######################################################"
+sep
+echo "Make sure that the following environmental variables are set\nprior to continuing with the setup:"
+echo "  - GIT_USER    - Github account username"
+echo "  - GIT_EMAIL   - Github account email"
+echo "  - GIT_TOKEN   - Github authentication token"
 echo ""
+wait_input
 
 export DEBIAN_FRONTEND=noninteractive ;
 export DEBCONF_NONINTERACTIVE_SEEN=true ;
 
 echo "Step 1: Update system after fresh install..."
-echo ""
+sep
 set -eux ; \
     sudo apt-get update ; \
     sudo apt-get upgrade -y ;
 
 echo "Step 2: Install basic components..."
-echo ""
+sep
 set -eux ; \
     sudo apt-get update ; \
     sudo apt-get install -y \
@@ -29,6 +49,7 @@ set -eux ; \
         zip \
         unzip \
         less \
+        awk \
         ca-certificates \
         openssh-client \
         openssh-server \
@@ -44,14 +65,19 @@ set -eux ; \
         gnupg-agent ;
 
 echo "Step 3: Install Git..."
-echo ""
+sep
 set -eux ; \
     sudo apt-get update ; \
     sudo apt-get install -y git ; \
-    git config --global core.editor "vim" ; 
+    cat gitconfig | \
+        sed "s/\${GIT_USER}/${GIT_USER}/" | \
+        sed "s/\${GIT_EMAIL}/${GIT_EMAIL}/" | \
+        sed "s/\${GIT_TOKEN}/${GIT_TOKEN}/" | \
+        sed "s/\${HOME}/${HOME}" >> ${HOME}/.gitconfig ; \
+    cp gitignore_global .gitignore_global ;
 
 echo "Step 4: Install Python..."
-echo ""
+sep
 set -eux ; \
     sudo apt-get update ; \
     sudo apt-get install -y python3 python3-pip ; \
@@ -61,7 +87,7 @@ set -eux ; \
     
 
 echo "Step 5: Install Docker and Docker Compose..."
-echo ""
+sep
 set -eux ; \
     sudo apt-get update ; \
     sudo apt-get remove docker docker-engine docker.io containerd runc ; \
@@ -76,11 +102,11 @@ set -eux ; \
     sudo chmod +x /usr/local/bin/docker-compose ; \
 
 echo "Step 6: Default configuration files..."
-echo ""
+sep
 set -eux ; \
-    curl https://raw.githubusercontent.com/alexZaicev/setup/master/vimrc >> ~/.vimrc ;
+    curl -Lq https://raw.githubusercontent.com/alexZaicev/setup/master/vimrc >> ~/.vimrc ;
+    curl -Lq https://raw.githubusercontent.com/alexZaicev/setup/master/bash_profile >> ~/.bash_profile ;
 
 echo "Setup finished successfully."
-echo ""
 echo "In order to allow your user to pick up all the changes made by the setup script, we recommend you to re-login."
-echo ""
+
