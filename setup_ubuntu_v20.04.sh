@@ -15,6 +15,25 @@ function sep {
     echo ""
 }
 
+function err {
+    echo "ERROR: $1"
+    exit 1;
+}
+
+function check_prereq {
+    if [ -z ${GIT_USER+no} ]; then 
+        err "Github account username not set"
+    fi
+    
+    if [ -z ${GIT_EMAIL+no} ]; then 
+        err "Github account email not set"
+    fi
+    
+    if [ -z ${GIT_TOKEN+no} ]; then 
+        err "Github authentication token not set"
+    fi
+}
+
 echo "Running setup script for Ubuntu v20.04"
 sep
 echo "Make sure that the following environmental variables are set\nprior to continuing with the setup:"
@@ -26,6 +45,10 @@ wait_input
 
 export DEBIAN_FRONTEND=noninteractive ;
 export DEBCONF_NONINTERACTIVE_SEEN=true ;
+
+echo "Step 0: Checking prerequisites..."
+sep
+check_prereq
 
 echo "Step 1: Update system after fresh install..."
 sep
@@ -70,10 +93,10 @@ set -eux ; \
     sudo apt-get update ; \
     sudo apt-get install -y git ; \
     cat gitconfig | \
-        sed "s/\${GIT_USER}/${GIT_USER}/" | \
-        sed "s/\${GIT_EMAIL}/${GIT_EMAIL}/" | \
-        sed "s/\${GIT_TOKEN}/${GIT_TOKEN}/" | \
-        sed "s/\${HOME}/${HOME}" >> ${HOME}/.gitconfig ; \
+        sed "s|\${GIT_USER}|${GIT_USER}|" | \
+        sed "s|\${GIT_EMAIL}|${GIT_EMAIL}|" | \
+        sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
+        sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ; \
     cp gitignore_global .gitignore_global ;
 
 echo "Step 4: Install Python..."
