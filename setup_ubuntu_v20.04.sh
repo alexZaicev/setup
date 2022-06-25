@@ -112,8 +112,10 @@ echo "Step 5: Install Docker and Docker Compose..."
 sep
 
 set -u ; \
-    sudo apt-get update ; \
-    sudo apt-get remove docker docker-engine docker.io containerd runc ;
+    sudo apt-get update ;
+
+# This command may fail if Docker is not installed
+sudo apt-get remove docker docker-engine docker.io containerd runc ;
 
 set -eu ; \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; \
