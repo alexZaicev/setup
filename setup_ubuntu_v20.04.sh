@@ -52,24 +52,23 @@ echo "Step 0: Checking prerequisites..."
 sep
 check_prereq
 
+set -eu
+
 echo "Step 1: Update system after fresh install..."
 sep
-set -eu ; \
-    sudo apt-get update ; \
-    sudo apt-get upgrade -y ;
+sudo apt-get update ;
+sudo apt-get upgrade -y ;
     
 echo "Step 2: Default configuration files..."
 sep
-set -eu ; \
-    curl -Lq ${REPO}/vimrc >> ${HOME}/.vimrc ; \
-    curl -Lq ${REPO}/bash_profile >> ${HOME}/.bash_profile ; \
-    source .bash_profile ;
+curl -Lq ${REPO}/vimrc >> ${HOME}/.vimrc ; 
+curl -Lq ${REPO}/bash_profile >> ${HOME}/.profile ;
+source .profile ;
 
 echo "Step 3: Install basic components..."
 sep
-set -eu ; \
-    sudo apt-get update ; \
-    sudo apt-get install -y \
+sudo apt-get update ;
+sudo apt-get install -y \
         build-essential \
         software-properties-common \
         gpg-agent \
@@ -98,35 +97,31 @@ set -eu ; \
 
 echo "Step 4: Install Git..."
 sep
-set -eu ; \
-    sudo apt-get update ; \
-    sudo apt-get install -y git ; \
-    curl -Lq ${REPO}/gitconfig | \
+sudo apt-get update ; 
+sudo apt-get install -y git ; 
+curl -Lq ${REPO}/gitconfig | \
         sed "s|\${GIT_USER}|${GIT_USER}|" | \
         sed "s|\${GIT_EMAIL}|${GIT_EMAIL}|" | \
         sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
-        sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ; \
-    curl -Lq ${REPO}/gitignore_global >> ${HOME}/.gitignore_global ;
+        sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ;
+curl -Lq ${REPO}/gitignore_global >> ${HOME}/.gitignore_global ;
     
 echo "Step 5: Install Docker and Docker Compose..."
 sep
-
-set -u ; \
-    sudo apt-get update ;
-
+sudo apt-get update ;
+set +eu
 # This command may fail if Docker is not installed
 sudo apt-get remove docker docker-engine docker.io containerd runc ;
-
-set -eu ; \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null ; \
-    sudo apt-get update ; \
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io ;
-    sudo groupadd docker ; \
-    sudo usermod -aG docker $USER ; \
-    sudo systemctl enable docker ;
-    sudo curl -L "https://github.com/docker/compose/releases/download/2.4.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose ; \
-    sudo chmod +x /usr/local/bin/docker-compose ; \
+set -eu
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; 
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null ; 
+sudo apt-get update ; 
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io ;
+sudo groupadd docker ; 
+sudo usermod -aG docker ${USER} ; 
+sudo systemctl enable docker ;
+sudo curl -L "https://github.com/docker/compose/releases/download/2.4.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose ; 
+sudo chmod +x /usr/local/bin/docker-compose ; 
 
 # TODO: install k8s
 
