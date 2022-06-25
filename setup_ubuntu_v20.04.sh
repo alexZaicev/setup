@@ -57,8 +57,15 @@ sep
 set -eu ; \
     sudo apt-get update ; \
     sudo apt-get upgrade -y ;
+    
+echo "Step 2: Default configuration files..."
+sep
+set -eu ; \
+    curl -Lq ${REPO}/vimrc >> ${HOME}/.vimrc ; \
+    curl -Lq ${REPO}/bash_profile >> ${HOME}/.bash_profile ; \
+    source .bash_profile ;
 
-echo "Step 2: Install basic components..."
+echo "Step 3: Install basic components..."
 sep
 set -eu ; \
     sudo apt-get update ; \
@@ -89,7 +96,7 @@ set -eu ; \
         bsdmainutils \
         gnupg-agent ;
 
-echo "Step 3: Install Git..."
+echo "Step 4: Install Git..."
 sep
 set -eu ; \
     sudo apt-get update ; \
@@ -100,17 +107,7 @@ set -eu ; \
         sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
         sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ; \
     cp ${REPO}/gitignore_global >> ${HOME}/.gitignore_global ;
-
-echo "Step 4: Install Python..."
-sep
-set -eu ; \
-    sudo apt-get update ; \
-    sudo apt-get install -y python3 python3-pip ; \
-    echo "alias python=python3" >> ${HOME}/.bash_aliases ; \
-    echo "alias pip=pip3" >> ${HOME}/.bash_aliases ; \
-    source ${HOME}/.bash_aliases ;
     
-
 echo "Step 5: Install Docker and Docker Compose..."
 sep
 set -eu ; \
@@ -126,11 +123,7 @@ set -eu ; \
     sudo curl -L "https://github.com/docker/compose/releases/download/2.4.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose ; \
     sudo chmod +x /usr/local/bin/docker-compose ; \
 
-echo "Step 6: Default configuration files..."
-sep
-set -eu ; \
-    curl -Lq ${REPO}/vimrc >> ${HOME}/.vimrc ;
-    curl -Lq ${REPO}/bash_profile >> ${HOME}/.bash_profile ;
+# TODO: install k8s
 
 echo "Setup finished successfully."
 echo "In order to allow your user to pick up all the changes made by the setup script, we recommend you to re-login."
