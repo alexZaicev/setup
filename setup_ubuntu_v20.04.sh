@@ -1,5 +1,7 @@
 #!/bin/bash
 
+REPO="https://raw.githubusercontent.com/alexZaicev/setup/master"
+
 function wait_input {
     echo "Press any key to continue..."
     while [ true ] ; do
@@ -52,13 +54,13 @@ check_prereq
 
 echo "Step 1: Update system after fresh install..."
 sep
-set -eux ; \
+set -eu ; \
     sudo apt-get update ; \
     sudo apt-get upgrade -y ;
 
 echo "Step 2: Install basic components..."
 sep
-set -eux ; \
+set -eu ; \
     sudo apt-get update ; \
     sudo apt-get install -y \
         build-essential \
@@ -89,29 +91,29 @@ set -eux ; \
 
 echo "Step 3: Install Git..."
 sep
-set -eux ; \
+set -eu ; \
     sudo apt-get update ; \
     sudo apt-get install -y git ; \
-    cat gitconfig | \
+    curl -Lq ${REPO}/gitconfig | \
         sed "s|\${GIT_USER}|${GIT_USER}|" | \
         sed "s|\${GIT_EMAIL}|${GIT_EMAIL}|" | \
         sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
         sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ; \
-    cp gitignore_global .gitignore_global ;
+    cp ${REPO}/gitignore_global >> ${HOME}.gitignore_global ;
 
 echo "Step 4: Install Python..."
 sep
-set -eux ; \
+set -eu ; \
     sudo apt-get update ; \
     sudo apt-get install -y python3 python3-pip ; \
-    echo "alias python=python3" >> ~/.bash_aliases ; \
-    echo "alias pip=pip3" >> ~/.bash_aliases ; \
-    source ~/.bash_aliases ;
+    echo "alias python=python3" >> ${HOME}/.bash_aliases ; \
+    echo "alias pip=pip3" >> ${HOME}/.bash_aliases ; \
+    source ${HOME}/.bash_aliases ;
     
 
 echo "Step 5: Install Docker and Docker Compose..."
 sep
-set -eux ; \
+set -eu ; \
     sudo apt-get update ; \
     sudo apt-get remove docker docker-engine docker.io containerd runc ; \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; \
@@ -126,9 +128,9 @@ set -eux ; \
 
 echo "Step 6: Default configuration files..."
 sep
-set -eux ; \
-    curl -Lq https://raw.githubusercontent.com/alexZaicev/setup/master/vimrc >> ~/.vimrc ;
-    curl -Lq https://raw.githubusercontent.com/alexZaicev/setup/master/bash_profile >> ~/.bash_profile ;
+set -eu ; \
+    curl -Lq ${REPO}/vimrc >> ${HOME}/.vimrc ;
+    curl -Lq ${REPO}/bash_profile >> ${HOME}/.bash_profile ;
 
 echo "Setup finished successfully."
 echo "In order to allow your user to pick up all the changes made by the setup script, we recommend you to re-login."
