@@ -18,12 +18,7 @@ export GREP_OPTIONS="--color=auto"
 # Basic PATH cofiguration
 export PATH="${PATH}:${HOME}/.gitconfigs"
 
-# HPE AWS connection specific
-export AWS_PROFILE="neonops"
-export USE_SOFTWARE_CATALOG="yes"
-#export USE_CLOUD_OBJECTSTORE_MANAGER="yes"
-
-alias ll="ls -Al"
+alias ll="ls -alF"
 alias cp="cp -R"
 alias mv="mv -f"
 alias rm="rm -f"
@@ -41,12 +36,6 @@ alias gitp="git push"
 alias gitu="git fetch --all && git pull"
 alias gitpf="git push --force"
 
-# Set Github key for accessing HPE private repos
-eval "$(ssh-agent -s)"
-DISPLAY=1 SSH_ASKPASS="/Users/alza/.git_askpass" ssh-add /Users/alza/.ssh_keys/github_key < /dev/null
-
-# AWS specific ofr neonops
-awssession() {
-     aws ssm start-session --target $(aws ec2 describe-instances --filters Name=tag:Name,Values=$1 | jq -r '.Reservations[].Instances[] | .InstanceId')
-}
-
+# Uncomment to enable SSH key registration when accessing private Github repositories
+# eval "$(ssh-agent -s)"
+# DISPLAY=1 SSH_ASKPASS="${HOME}/.git_askpass" ssh-add ${HOME}/.ssh_keys/github_key < /dev/null
