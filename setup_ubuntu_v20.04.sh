@@ -72,7 +72,7 @@ set -eux ; \
         zip \
         unzip \
         less \
-        awk \
+        gawk \
         ca-certificates \
         openssh-client \
         openssh-server \
