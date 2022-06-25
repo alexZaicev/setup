@@ -99,7 +99,7 @@ set -eu ; \
         sed "s|\${GIT_EMAIL}|${GIT_EMAIL}|" | \
         sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
         sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ; \
-    cp ${REPO}/gitignore_global >> ${HOME}.gitignore_global ;
+    cp ${REPO}/gitignore_global >> ${HOME}/.gitignore_global ;
 
 echo "Step 4: Install Python..."
 sep
