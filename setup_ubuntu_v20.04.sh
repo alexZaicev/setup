@@ -41,8 +41,7 @@ function check_prereq {
 }
 
 echo "Running setup script for Ubuntu v20.04"
-sep
-echo "Make sure that the following environmental variables are set\nprior to continuing with the setup:"
+echo "Make sure that the following environmental variables are set prior to continuing with the setup:"
 echo "  - GIT_USER    - Github account username"
 echo "  - GIT_EMAIL   - Github account email"
 echo "  - GIT_TOKEN   - Github authentication token"
@@ -102,7 +101,7 @@ curl -Lq ${REPO}/gitconfig | \
         sed "s|\${GIT_TOKEN}|${GIT_TOKEN}|" | \
         sed "s|\${HOME}|${HOME}|" >> ${HOME}/.gitconfig ;
 curl -Lq ${REPO}/gitignore_global >> ${HOME}/.gitignore_global ;
-    
+
 step "Step 5: Install Docker and Docker Compose..."
 curl -Lq https://get.docker.com | bash ;
 
